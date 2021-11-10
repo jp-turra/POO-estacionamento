@@ -11,4 +11,8 @@ public class Marca {
 		super();
 		this.nome = nome;
 	}
+
+	public String getNome() {
+		return nome;
+	}
 }

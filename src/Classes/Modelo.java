@@ -8,4 +8,8 @@ public class Modelo {
 		super();
 		this.nome = nome;
 	}
+
+	public String getNome() {
+		return nome;
+	}
 }

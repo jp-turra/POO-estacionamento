@@ -5,7 +5,7 @@ import java.util.Scanner;
 import Classes.*;
 
 public class App {
-    // atributos static s�o atributos de classe
+    // atributos static são atributos de classe
 	private static ArrayList<Carro> vagas = new ArrayList<Carro>(); // o estacionamento tem 100 vagas numeradas de 0..99
 	private static ArrayList<Marca> marcas = new ArrayList<Marca>();
 	private static ArrayList<Modelo> modelos = new ArrayList<Modelo>();
@@ -28,11 +28,10 @@ public class App {
             printString("4) Sair do sistema");
             printString("");
             printString("Insira um número para escolher uma ação:");
-            menu = scan.nextInt();
-
+            menu = Integer.parseInt(scan.nextLine());
             switch (menu) {
                 case 1:
-                    entradaCarro(scan);
+                    entradaCarro();
                     break;
                 case 2:
                     saidaCarro();
@@ -49,25 +48,28 @@ public class App {
                     break;
             }
         } while (menu != 4);
+        scan.close();
 		// opcao
 		// chamar metodos static que correspondam as opcoes de menu
 	}
 	
-	private static void entradaCarro(Scanner scan) {
+	private static void entradaCarro() {
 		// criar o carro e cadastra-lo no vetor na posicao correta
         printString("Estacionar");
-        
-        Marca marca = adicionarMarca(scan);
-        Modelo modelo = adicionarModelo(scan);
+        Scanner scan = new Scanner(System.in);
 
+        Marca marca = menuMarca(scan);
+        Modelo modelo = menuModelo(scan);
+        
         printString("\nInsira a placa do carro: ");
         String placa = scan.nextLine();
-        
+
         if (modelo == null || marca == null) {
             printString("Erro ao definir modelo e/ou marca.");
             return;
         }
         Carro carro = new Carro(placa, modelo, LocalDateTime.now());
+        printString("Registro de entrada de carro: " + placa + ", " + modelo.getNome() + ", " + LocalDateTime.now().toString());
         vagas.add(carro);
 	}
 	
@@ -86,8 +88,8 @@ public class App {
     private static void printString(String str) {
         System.out.println(str);
     }
-    private static Marca adicionarMarca (Scanner scan) {
-                
+    
+    private static Marca menuMarca (Scanner scan) {        
         int menuMarca = 0;
         Marca marca = null;
         boolean marcaOk = false;
@@ -96,9 +98,11 @@ public class App {
         do {
             printString("\nMarcas Disponíveis");
             printString("0) Adicionar nova marca");
-            // marcas.display();
+            for (Marca m : marcas) {
+                printString(String.valueOf(marcas.indexOf(m)+1) + ") " + m.getNome());
+            }
             printString("\nSelecione uma marca: ");
-            menuMarca = scan.nextInt();
+            menuMarca = Integer.parseInt(scan.nextLine());
             try {
                 if (menuMarca == 0) {
                     printString("\nAdicionar nova marca\n");
@@ -122,9 +126,11 @@ public class App {
             marca = new Marca(nomeMarca);
             marcas.add(marca);
         }
+        printString("Marca selecionada: " + marca.getNome());
         return marca;
     }
-    private static Modelo adicionarModelo(Scanner scan) {
+    
+    private static Modelo menuModelo(Scanner scan) {
         int menuModelo = 0;
         Modelo modelo = null;
         boolean modeloOk = false;
@@ -132,14 +138,16 @@ public class App {
         
         
         do {
-            printString("/nModelos Disponíveis");
+            printString("\nModelos Disponíveis");
             printString("0) Adicionar novo modelo");
-            // modelos.display();
-            printString("/nSelecione uma marca: ");
-            menuModelo = scan.nextInt();
+            for (Modelo m : modelos) {
+                printString(String.valueOf(modelos.indexOf(m)+1) + ") " + m.getNome());
+            }
+            printString("\nSelecione um modelo: ");
+            menuModelo = Integer.parseInt(scan.nextLine());
             try {
                 if (menuModelo == 0) {
-                    printString("\nAdicionar nova marca\n");
+                    printString("\nAdicionar novo modelo\n");
                     modeloOk = true;
                     novoModelo = true;
                 } else if (menuModelo > 0) {
@@ -150,9 +158,9 @@ public class App {
                 }
                 
             } catch (Exception e) {
-                printString("Pedido inválido. selecione outro número");
+                printString("Pedido inválido. Selecione outro número");
             }
-        } while (modeloOk);
+        } while (!modeloOk);
 
         if (novoModelo) {
             printString("\nInsira o nome do modelo: ");
@@ -160,6 +168,7 @@ public class App {
             modelo = new Modelo(nomeModelo);
             modelos.add(modelo);
         }
+        printString("Modelo selecionado: " + modelo.getNome());
         return modelo;
     }
 }
