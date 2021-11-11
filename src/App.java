@@ -1,25 +1,27 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 import Classes.*;
+import Utils.Utils;
 
 public class App {
     // atributos static são atributos de classe
 	private static ArrayList<Carro> vagas = new ArrayList<Carro>(); // o estacionamento tem 100 vagas numeradas de 0..99
 	private static ArrayList<Marca> marcas = new ArrayList<Marca>();
 	private static ArrayList<Modelo> modelos = new ArrayList<Modelo>();
-	private static ArrayList<Carro> historico = new ArrayList<Carro>();
-	
+	private static ArrayList<Historico> historicos = new ArrayList<Historico>();
+	public static Utils utils = new Utils();
 	// eventualmente outros atributos static
 	
 	public static void main(String[] args) {
+        setup();
 		// outras variaveis locais
-		// menu
-
-        printString("Seja bem vindo!");
         int menu;
         Scanner scan = new Scanner(System.in);
+		// men
+        printString("Seja bem vindo!");
         do {
             printString("\nEstacionamento - Menu");
             printString("1) Registrar chegada de carro");
@@ -47,6 +49,7 @@ public class App {
                     printString("Comando inválido, por favor, tente novamente.");
                     break;
             }
+            scan.reset();
         } while (menu != 4);
         scan.close();
 		// opcao
@@ -59,7 +62,7 @@ public class App {
         Scanner scan = new Scanner(System.in);
 
         Marca marca = menuMarca(scan);
-        Modelo modelo = menuModelo(scan);
+        Modelo modelo = menuModelo(scan, marca);
         
         printString("\nInsira a placa do carro: ");
         String placa = scan.nextLine();
@@ -74,9 +77,14 @@ public class App {
 	}
 	
 	private static float saidaCarro() {
-        printString("Sair");
-		float preco = 0;
-		// logica para calcular preco do estacionamento e coloca-lo no historico
+        // logica para calcular preco do estacionamento e coloca-lo no historico
+        Carro carro = menuVagas();
+        printString("Estacionamento finalizado: ");
+        carro.display();
+        carro.setSaida(LocalDateTime.now());
+		float preco = carro.getValor();
+        printString("\nCusto: " + preco);
+		historicos.add(new Historico(carro));
 		return preco;
 	}
 
@@ -130,18 +138,22 @@ public class App {
         return marca;
     }
     
-    private static Modelo menuModelo(Scanner scan) {
+    private static Modelo menuModelo(Scanner scan, Marca marca) {
         int menuModelo = 0;
         Modelo modelo = null;
         boolean modeloOk = false;
         boolean novoModelo = false;
-        
+        ArrayList<Modelo> mlist = new ArrayList<Modelo>();
+        for (Modelo m : modelos) {
+            if (Boolean.TRUE.equals(marca.temModelo(m)))
+                mlist.add(m);
+        }
         
         do {
             printString("\nModelos Disponíveis");
             printString("0) Adicionar novo modelo");
-            for (Modelo m : modelos) {
-                printString(String.valueOf(modelos.indexOf(m)+1) + ") " + m.getNome());
+            for (Modelo m : mlist) {
+                printString(String.valueOf(mlist.indexOf(m)+1) + ") " + m.getNome());
             }
             printString("\nSelecione um modelo: ");
             menuModelo = Integer.parseInt(scan.nextLine());
@@ -151,7 +163,7 @@ public class App {
                     modeloOk = true;
                     novoModelo = true;
                 } else if (menuModelo > 0) {
-                    modelo = modelos.get(menuModelo-1);
+                    modelo = mlist.get(menuModelo-1);
                     modeloOk = true;
                 } else {
                     printString("Insira um número válido.");
@@ -167,8 +179,42 @@ public class App {
             String nomeModelo = scan.nextLine();
             modelo = new Modelo(nomeModelo);
             modelos.add(modelo);
+            marca.addModelo(modelo);
         }
         printString("Modelo selecionado: " + modelo.getNome());
         return modelo;
+    }
+
+    private static Carro menuVagas () {        
+        int menuVaga = 0;
+        Carro vaga = null;
+        boolean vagaOk = false;
+        Scanner scan = new Scanner(System.in);
+        do {
+            for (Carro c : vagas) {
+                printString(String.valueOf(vagas.indexOf(c)+1) + ") " + c.getModelo().getNome() + " - " + c.getPlaca());
+            }
+            printString("\nSelecione uma vaga para sair: ");
+            menuVaga = Integer.parseInt(scan.nextLine());
+            try {
+                if (menuVaga > 0) {
+                    int index = menuVaga-1;
+                    vaga = vagas.remove(index);
+                    vagaOk = true;
+                } else {
+                    printString("Insira um número válido.");
+                }
+                
+            } catch (Exception e) {
+                printString("Pedido inválido. selecione outro número");
+            }
+        } while (!vagaOk);
+        scan.close();
+        return vaga;
+    }
+
+    private static void setup() {
+        marcas = utils.getMarcas();
+        modelos = utils.getModelos();
     }
 }
