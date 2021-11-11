@@ -1,0 +1,87 @@
+[
+  {
+    "nome": "Chevrolet",
+    "modelos": [
+      { "nome": "Onix" },
+      {
+        "nome": "Cruze"
+      },
+      {
+        "nome": "Tracker"
+      },
+      {
+        "nome": "S10"
+      },
+      {
+        "nome": "Camaro"
+      }
+    ]
+  },
+  {
+    "nome": "Volvo",
+    "modelos": [
+      {
+        "nome": "XC40"
+      },
+      {
+        "nome": "S90"
+      }
+    ]
+  },
+  {
+    "nome": "Volkswagen",
+    "modelos": [
+      {
+        "nome": "Nivus"
+      },
+      {
+        "nome": "Up"
+      },
+      {
+        "nome": "Gol"
+      },
+      {
+        "nome": "Polo"
+      }
+    ]
+  },
+  {
+    "nome": "Audi",
+    "modelos": [
+      {
+        "nome": "A3"
+      },
+      {
+        "nome": "A4"
+      },
+      {
+        "nome": "Q8"
+      },
+      {
+        "nome": "TT"
+      }
+    ]
+  },
+  {
+    "nome": "Ferrari",
+    "modelos": [
+      {
+        "nome": "488"
+      },
+      {
+        "nome": "812"
+      }
+    ]
+  },
+  {
+    "nome": "Lamburguini",
+    "modelos": [
+      {
+        "nome": "Aventor"
+      },
+      {
+        "nome": "gallardo"
+      }
+    ]
+  }
+]
