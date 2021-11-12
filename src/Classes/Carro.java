@@ -43,6 +43,11 @@ public class Carro {
 	public float getValor() {
 		return valor;
 	}
+	public String getEstadia() {
+		float diff = this.saida.toEpochSecond(ZoneOffset.UTC) - this.entrada.toEpochSecond(ZoneOffset.UTC);
+
+		return "time.toString()";
+	}
 
 	public void display() {
 		System.out.print(this.modelo.getNome() + " - " + this.placa);

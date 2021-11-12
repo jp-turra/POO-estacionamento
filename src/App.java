@@ -1,6 +1,5 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 import Classes.*;
@@ -12,6 +11,7 @@ public class App {
 	private static ArrayList<Marca> marcas = new ArrayList<Marca>();
 	private static ArrayList<Modelo> modelos = new ArrayList<Modelo>();
 	private static ArrayList<Historico> historicos = new ArrayList<Historico>();
+    private static Scanner scan = new Scanner(System.in);
 	public static Utils utils = new Utils();
 	// eventualmente outros atributos static
 	
@@ -19,7 +19,7 @@ public class App {
         setup();
 		// outras variaveis locais
         int menu;
-        Scanner scan = new Scanner(System.in);
+        
 		// men
         printString("Seja bem vindo!");
         do {
@@ -58,12 +58,9 @@ public class App {
 	
 	private static void entradaCarro() {
 		// criar o carro e cadastra-lo no vetor na posicao correta
-        printString("Estacionar");
-        Scanner scan = new Scanner(System.in);
-
-        Marca marca = menuMarca(scan);
-        Modelo modelo = menuModelo(scan, marca);
-        
+        Marca marca = menuMarca();
+        Modelo modelo = menuModelo(marca);
+        LocalDateTime time = menuHora();
         printString("\nInsira a placa do carro: ");
         String placa = scan.nextLine();
 
@@ -71,18 +68,20 @@ public class App {
             printString("Erro ao definir modelo e/ou marca.");
             return;
         }
-        Carro carro = new Carro(placa, modelo, LocalDateTime.now());
-        printString("Registro de entrada de carro: " + placa + ", " + modelo.getNome() + ", " + LocalDateTime.now().toString());
+        Carro carro = new Carro(placa, modelo, time);
+        printString("Registro de entrada de carro: " + placa + ", " + marca.getNome() + " " + modelo.getNome() + ", " + now.toString());
         vagas.add(carro);
 	}
 	
 	private static float saidaCarro() {
         // logica para calcular preco do estacionamento e coloca-lo no historico
         Carro carro = menuVagas();
+        
         printString("Estacionamento finalizado: ");
         carro.display();
         carro.setSaida(LocalDateTime.now());
-		float preco = carro.getValor();
+        printString("\nEstadia " + carro.getEstadia());
+        float preco = carro.getValor();
         printString("\nCusto: " + preco);
 		historicos.add(new Historico(carro));
 		return preco;
@@ -97,7 +96,7 @@ public class App {
         System.out.println(str);
     }
     
-    private static Marca menuMarca (Scanner scan) {        
+    private static Marca menuMarca () {        
         int menuMarca = 0;
         Marca marca = null;
         boolean marcaOk = false;
@@ -113,7 +112,6 @@ public class App {
             menuMarca = Integer.parseInt(scan.nextLine());
             try {
                 if (menuMarca == 0) {
-                    printString("\nAdicionar nova marca\n");
                     marcaOk = true;
                     novaMarca = true;
                 } else if (menuMarca > 0) {
@@ -122,23 +120,23 @@ public class App {
                 } else {
                     printString("Insira um número válido.");
                 }
-                
             } catch (Exception e) {
                 printString("Pedido inválido. selecione outro número");
             }
         } while (!marcaOk);
 
         if (novaMarca) {
-            printString("\nInsira o nome da marca: ");
+            printString("\nInsira o nome da nova marca: ");
             String nomeMarca = scan.nextLine();
             marca = new Marca(nomeMarca);
             marcas.add(marca);
         }
-        printString("Marca selecionada: " + marca.getNome());
+        
+        printString("\nMarca selecionada: " + marca.getNome());
         return marca;
     }
     
-    private static Modelo menuModelo(Scanner scan, Marca marca) {
+    private static Modelo menuModelo(Marca marca) {
         int menuModelo = 0;
         Modelo modelo = null;
         boolean modeloOk = false;
@@ -159,7 +157,6 @@ public class App {
             menuModelo = Integer.parseInt(scan.nextLine());
             try {
                 if (menuModelo == 0) {
-                    printString("\nAdicionar novo modelo\n");
                     modeloOk = true;
                     novoModelo = true;
                 } else if (menuModelo > 0) {
@@ -175,13 +172,14 @@ public class App {
         } while (!modeloOk);
 
         if (novoModelo) {
-            printString("\nInsira o nome do modelo: ");
+            printString("\nInsira o nome do novo modelo: ");
             String nomeModelo = scan.nextLine();
             modelo = new Modelo(nomeModelo);
             modelos.add(modelo);
             marca.addModelo(modelo);
         }
-        printString("Modelo selecionado: " + modelo.getNome());
+        
+        printString("\nModelo selecionado: " + modelo.getNome());
         return modelo;
     }
 
@@ -189,7 +187,6 @@ public class App {
         int menuVaga = 0;
         Carro vaga = null;
         boolean vagaOk = false;
-        Scanner scan = new Scanner(System.in);
         do {
             for (Carro c : vagas) {
                 printString(String.valueOf(vagas.indexOf(c)+1) + ") " + c.getModelo().getNome() + " - " + c.getPlaca());
@@ -209,8 +206,40 @@ public class App {
                 printString("Pedido inválido. selecione outro número");
             }
         } while (!vagaOk);
-        scan.close();
         return vaga;
+    }
+
+    private static LocalDateTime menuHora() {
+        printString("\nInsira o horário ou selecione uma opção: ");
+        printString("1) Agora");
+        printString("2) Horário específico");
+        int menu = Integer.parseInt(scan.nextLine());
+        LocalDateTime time = LocalDateTime.now();
+        boolean menuOk = false;
+
+        while (!menuOk) {
+            time = LocalDateTime.now();
+            switch (menu) {
+                case 1:
+                    menuOk = true;
+                    break;
+                case 2:
+                    printString("Insira o dia:");
+                    int dia = Integer.parseInt(scan.nextLine());
+                    printString("Insira a hora:");
+                    int hora = Integer.parseInt(scan.nextLine());
+                    printString("Insira o minuto:");
+                    int minuto = Integer.parseInt(scan.nextLine());
+                    time = LocalDateTime.of(time.getYear(), time.getMonth(), dia, hora, minuto, 0);
+                    menuOk = true;
+                    break;
+                default:
+                    printString("Opção inválida");
+                    break;
+            }
+            printString("Hora de entrada: " + time.toLocalTime());
+        }
+        return time;
     }
 
     private static void setup() {
