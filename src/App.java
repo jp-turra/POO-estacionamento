@@ -7,61 +7,81 @@ import Utils.Utils;
 
 public class App {
     // atributos static são atributos de classe
-	private static ArrayList<Carro> vagas = new ArrayList<Carro>(); // o estacionamento tem 100 vagas numeradas de 0..99
-	private static ArrayList<Marca> marcas = new ArrayList<Marca>();
-	private static ArrayList<Modelo> modelos = new ArrayList<Modelo>();
-	private static ArrayList<Historico> historicos = new ArrayList<Historico>();
+    // TODO: Tornar Array vagas em vetor
+    private static Carro[] vagas = new Carro[100]; // o estacionamento tem 100 vagas numeradas de 0..99
+    private static ArrayList<Marca> marcas = new ArrayList<Marca>();
+    private static ArrayList<Modelo> modelos = new ArrayList<Modelo>();
+    private static ArrayList<Historico> historicos = new ArrayList<Historico>();
     private static Scanner scan = new Scanner(System.in);
-	public static Utils utils = new Utils();
-	// eventualmente outros atributos static
-	
-	public static void main(String[] args) {
+    public static Utils utils = new Utils();
+    // eventualmente outros atributos static
+
+    public static void main(String[] args) {
         setup();
-		// outras variaveis locais
         int menu;
-        
-		// men
         printString("Seja bem vindo!");
         do {
             printString("\nEstacionamento - Menu");
             printString("1) Registrar chegada de carro");
             printString("2) Registrar saída de carro");
             printString("3) Gerar relatório");
-            printString("4) Sair do sistema");
-            printString("5) Ver vagas");
+            printString("4) Ver vagas");
+            printString("5) Sair do sistema");
             printString("");
             printString("Insira um número para escolher uma ação:");
             menu = Integer.parseInt(scan.nextLine());
+            utils.printSpace();
             switch (menu) {
-                case 1:
-                    entradaCarro();
-                    break;
-                case 2:
-                    saidaCarro();
-                    break;
-                case 3:
-                    gerarRelatorio();
-                    break;
-                case 4:
-                    printString("Obrigado por utilizar! Até logo.");
-                    break;
-            
-                default:
-                    printString("Comando inválido, por favor, tente novamente.");
-                    break;
+            case 1:
+                entradaCarro();
+                break;
+            case 2:
+                saidaCarro();
+                break;
+            case 3:
+                gerarRelatorio();
+                break;
+            case 4:
+                verVagas();
+                break;
+            case 5:
+                printString("Obrigado por utilizar! Até logo.");
+                break;
+
+            default:
+                printString("Comando inválido, por favor, tente novamente.");
+                break;
             }
             scan.reset();
-        } while (menu != 4);
+            setarDados();
+            utils.printSpace();
+        } while (menu != 5);
         scan.close();
-		// opcao
-		// chamar metodos static que correspondam as opcoes de menu
-	}
-	
-	private static void entradaCarro() {
-		// criar o carro e cadastra-lo no vetor na posicao correta
+    }
+
+    private static void setup() {
+        marcas = utils.getMarcas();
+        modelos = utils.getModelos();
+        historicos = utils.getHistorico();
+        vagas = utils.getVagas();
+        if (vagas.length == 0) {
+            vagas = new Carro[100];
+            for (int i = 0; i < 100; i++)
+                vagas[i] = null;
+        }
+    }
+
+    private static void setarDados() {
+        utils.setDatabase(vagas, "Vagas");
+        utils.setDatabase(historicos, "Historico");
+        utils.setDatabase(marcas, "Marca");
+        utils.setDatabase(modelos, "Modelo");
+    }
+
+    private static void entradaCarro() {
         Marca marca = menuMarca();
         Modelo modelo = menuModelo(marca);
-        LocalDateTime time = menuHora();
+        LocalDateTime time = menuHora("entrada");
         printString("\nInsira a placa do carro: ");
         String placa = scan.nextLine();
 
@@ -70,39 +90,85 @@ public class App {
             return;
         }
         Carro carro = new Carro(placa, modelo, time);
-        printString("Registro de entrada de carro: " + placa + ", " + marca.getNome() + " " + modelo.getNome() + ", " + now.toString());
-        vagas.add(carro);
-	}
-	
-	private static float saidaCarro() {
-        // logica para calcular preco do estacionamento e coloca-lo no historico
+        utils.printSpace();
+        printString("Registro de entrada de carro: " + placa + ", " + marca.getNome() + " " + modelo.getNome() + ", "
+                + time.toString());
+        adicionarCarro(carro);
+        registrarHistorico(carro);
+        utils.setDatabase(historicos, "Historico");
+    }
+
+    private static void saidaCarro() {
         Carro carro = menuVagas();
-        
+        if (carro == null)
+            return;
         printString("Estacionamento finalizado: ");
         carro.display();
-        carro.setSaida(LocalDateTime.now());
+        LocalDateTime time = menuHora("saída");
+        carro.setSaida(time);
         printString("\nEstadia " + carro.getEstadia());
         float preco = carro.getValor();
         printString("\nCusto: " + preco);
-        registrarHistorico(carro);
-		return preco;
-	}
+        removerCarro(carro);
+    }
+
+    private static void verVagas() {
+        for (int i = 0; i < vagas.length; i++) {
+            if (vagas[i] != null) {
+                Carro c = vagas[i];
+                printString(String.valueOf(i + 1) + ") " + c.getModelo().getNome() + " - " + c.getPlaca());
+            }
+        }
+    }
+
+    private static void adicionarCarro(Carro carro) {
+        if (vagas.length == 0) {
+            vagas[0] = carro;
+            return;
+        }
+        for (int i = 0; i < vagas.length; i++) {
+            if (vagas[i] == null) {
+                vagas[i] = carro;
+                return;
+            }
+        }
+    }
+
+    private static Carro removerCarro(Carro carro) {
+        for (int i = 0; i < vagas.length; i++) {
+            if (vagas[i] != null && vagas[i].getPlaca().equals(carro.getPlaca())) {
+                Carro carroExclude = vagas[i];
+                vagas[i] = null;
+                return carroExclude;
+            }
+        }
+        return null;
+    }
+
+    private static boolean estacionamentoVazio() {
+        for (int i = 0; i < vagas.length; i++) {
+            if (vagas[i] != null) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private static void gerarRelatorio() {
         printString("Relatório");
     }
-	
-    private static void registrarHistorico (Carro carro) {
-        if (historicos == null) historicos = new ArrayList<Historico>();
+
+    private static void registrarHistorico(Carro carro) {
+        if (historicos == null)
+            historicos = new ArrayList<Historico>();
         historicos.add(new Historico(carro));
-        utils.setDatabase(historicos, "Historico");
     }
-	// outros m�todos static conforme especificacao do trabalho e necessidades de implementacao
+
     private static void printString(String str) {
         System.out.println(str);
     }
-    
-    private static Marca menuMarca () {        
+
+    private static Marca menuMarca() {
         int menuMarca = 0;
         Marca marca = null;
         boolean marcaOk = false;
@@ -112,7 +178,7 @@ public class App {
             printString("\nMarcas Disponíveis");
             printString("0) Adicionar nova marca");
             for (Marca m : marcas) {
-                printString(String.valueOf(marcas.indexOf(m)+1) + ") " + m.getNome());
+                printString(String.valueOf(marcas.indexOf(m) + 1) + ") " + m.getNome());
             }
             printString("\nSelecione uma marca: ");
             menuMarca = Integer.parseInt(scan.nextLine());
@@ -121,7 +187,7 @@ public class App {
                     marcaOk = true;
                     novaMarca = true;
                 } else if (menuMarca > 0) {
-                    marca = marcas.get(menuMarca-1);
+                    marca = marcas.get(menuMarca - 1);
                     marcaOk = true;
                 } else {
                     printString("Insira um número válido.");
@@ -132,17 +198,18 @@ public class App {
         } while (!marcaOk);
 
         if (novaMarca) {
+            utils.printSpace();
             printString("\nInsira o nome da nova marca: ");
             String nomeMarca = scan.nextLine();
             marca = new Marca(nomeMarca);
             marcas.add(marca);
-            utils.setDatabase(marcas, "Marca");
         }
-        
+        utils.printSpace();
         printString("\nMarca selecionada: " + marca.getNome());
+        utils.printSpace();
         return marca;
     }
-    
+
     private static Modelo menuModelo(Marca marca) {
         int menuModelo = 0;
         Modelo modelo = null;
@@ -153,12 +220,12 @@ public class App {
             if (Boolean.TRUE.equals(marca.temModelo(m)))
                 mlist.add(m);
         }
-        
+
         do {
             printString("\nModelos Disponíveis");
             printString("0) Adicionar novo modelo");
             for (Modelo m : mlist) {
-                printString(String.valueOf(mlist.indexOf(m)+1) + ") " + m.getNome());
+                printString(String.valueOf(mlist.indexOf(m) + 1) + ") " + m.getNome());
             }
             printString("\nSelecione um modelo: ");
             menuModelo = Integer.parseInt(scan.nextLine());
@@ -167,50 +234,53 @@ public class App {
                     modeloOk = true;
                     novoModelo = true;
                 } else if (menuModelo > 0) {
-                    modelo = mlist.get(menuModelo-1);
+                    modelo = mlist.get(menuModelo - 1);
                     modeloOk = true;
                 } else {
                     printString("Insira um número válido.");
                 }
-                
+
             } catch (Exception e) {
                 printString("Pedido inválido. Selecione outro número");
             }
         } while (!modeloOk);
 
         if (novoModelo) {
+            utils.printSpace();
             printString("\nInsira o nome do novo modelo: ");
             String nomeModelo = scan.nextLine();
             modelo = new Modelo(nomeModelo);
             modelos.add(modelo);
             marca.addModelo(modelo);
-            utils.setDatabase(marcas, "Marca");
-            utils.setDatabase(modelos, "Modelo");
         }
-        
+        utils.printSpace();
         printString("\nModelo selecionado: " + modelo.getNome());
+        utils.printSpace();
         return modelo;
     }
 
-    private static Carro menuVagas () {        
+    private static Carro menuVagas() {
         int menuVaga = 0;
         Carro vaga = null;
         boolean vagaOk = false;
+        if (estacionamentoVazio()) {
+            printString("Nenhuma vaga ocupada");
+            return null;
+        }
         do {
-            for (Carro c : vagas) {
-                printString(String.valueOf(vagas.indexOf(c)+1) + ") " + c.getModelo().getNome() + " - " + c.getPlaca());
-            }
+            verVagas();
+            utils.printSpace();
             printString("\nSelecione uma vaga para sair: ");
             menuVaga = Integer.parseInt(scan.nextLine());
             try {
                 if (menuVaga > 0) {
-                    int index = menuVaga-1;
-                    vaga = vagas.remove(index);
+                    int index = menuVaga - 1;
+                    vaga = removerCarro(vagas[index]);
                     vagaOk = true;
                 } else {
                     printString("Insira um número válido.");
                 }
-                
+
             } catch (Exception e) {
                 printString("Pedido inválido. selecione outro número");
             }
@@ -218,10 +288,11 @@ public class App {
         return vaga;
     }
 
-    private static LocalDateTime menuHora() {
-        printString("\nInsira o horário ou selecione uma opção: ");
+    private static LocalDateTime menuHora(String type) {
+        printString("\nHorário de " + type);
         printString("1) Agora");
-        printString("2) Horário específico");
+        printString("2) Outro Horário específico");
+        printString("\nInsira o horário ou selecione uma opção: ");
         int menu = Integer.parseInt(scan.nextLine());
         LocalDateTime time = LocalDateTime.now();
         boolean menuOk = false;
@@ -229,32 +300,29 @@ public class App {
         while (!menuOk) {
             time = LocalDateTime.now();
             switch (menu) {
-                case 1:
-                    menuOk = true;
-                    break;
-                case 2:
-                    printString("Insira o dia:");
-                    int dia = Integer.parseInt(scan.nextLine());
-                    printString("Insira a hora:");
-                    int hora = Integer.parseInt(scan.nextLine());
-                    printString("Insira o minuto:");
-                    int minuto = Integer.parseInt(scan.nextLine());
-                    time = LocalDateTime.of(time.getYear(), time.getMonth(), dia, hora, minuto, 0);
-                    menuOk = true;
-                    break;
-                default:
-                    printString("Opção inválida");
-                    break;
+            case 1:
+                menuOk = true;
+                break;
+            case 2:
+                utils.printSpace();
+                printString("Insira o dia:");
+                int dia = Integer.parseInt(scan.nextLine());
+                printString("Insira a hora:");
+                int hora = Integer.parseInt(scan.nextLine());
+                printString("Insira o minuto:");
+                int minuto = Integer.parseInt(scan.nextLine());
+                time = LocalDateTime.of(time.getYear(), time.getMonth(), dia, hora, minuto, 0);
+                menuOk = true;
+                break;
+            default:
+                printString("Opção inválida");
+                break;
             }
-            printString("Hora de entrada: " + time.toLocalTime());
+            utils.printSpace();
+            printString("Hora de " + type + ": " + time.toLocalTime());
+            utils.printSpace();
         }
         return time;
-    }
-
-    private static void setup() {
-        marcas = utils.getMarcas();
-        modelos = utils.getModelos();
-        historicos = utils.getHistorico();
     }
 
 }

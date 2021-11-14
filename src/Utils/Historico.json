@@ -1,1 +1,52 @@
-
+[
+  {
+    "carro": {
+      "modelo": {
+        "nome": "Onix"
+      },
+      "placa": "qwe1234",
+      "entrada": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 1,
+          "minute": 37,
+          "second": 53,
+          "nano": 169679050
+        }
+      },
+      "saida": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 1,
+          "minute": 38,
+          "second": 9,
+          "nano": 473393895
+        }
+      },
+      "valor": 10.0,
+      "historicoId": 0
+    },
+    "dataCreated": {
+      "date": {
+        "year": 2021,
+        "month": 11,
+        "day": 14
+      },
+      "time": {
+        "hour": 1,
+        "minute": 37,
+        "second": 54,
+        "nano": 808537373
+      }
+    },
+    "index": 0
+  }
+]
