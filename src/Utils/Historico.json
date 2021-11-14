@@ -48,5 +48,129 @@
       }
     },
     "index": 0
+  },
+  {
+    "carro": {
+      "modelo": {
+        "nome": "Onix"
+      },
+      "placa": "qwe1234",
+      "entrada": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 1,
+          "minute": 56,
+          "second": 1,
+          "nano": 567264572
+        }
+      },
+      "valor": 10.0,
+      "historicoId": 1
+    },
+    "dataCreated": {
+      "date": {
+        "year": 2021,
+        "month": 11,
+        "day": 14
+      },
+      "time": {
+        "hour": 1,
+        "minute": 56,
+        "second": 2,
+        "nano": 949692519
+      }
+    },
+    "index": 1
+  },
+  {
+    "carro": {
+      "modelo": {
+        "nome": "XC40"
+      },
+      "placa": "qwe12345",
+      "entrada": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 1,
+          "minute": 56,
+          "second": 25,
+          "nano": 136355846
+        }
+      },
+      "saida": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 1,
+          "minute": 56,
+          "second": 49,
+          "nano": 777357110
+        }
+      },
+      "valor": 10.0,
+      "historicoId": 2
+    },
+    "dataCreated": {
+      "date": {
+        "year": 2021,
+        "month": 11,
+        "day": 14
+      },
+      "time": {
+        "hour": 1,
+        "minute": 56,
+        "second": 28,
+        "nano": 364402134
+      }
+    },
+    "index": 2
+  },
+  {
+    "carro": {
+      "modelo": {
+        "nome": "Nivus"
+      },
+      "placa": "asd1234",
+      "entrada": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 1,
+          "minute": 56,
+          "second": 39,
+          "nano": 912789530
+        }
+      },
+      "valor": 10.0,
+      "historicoId": 3
+    },
+    "dataCreated": {
+      "date": {
+        "year": 2021,
+        "month": 11,
+        "day": 14
+      },
+      "time": {
+        "hour": 1,
+        "minute": 56,
+        "second": 42,
+        "nano": 473655923
+      }
+    },
+    "index": 3
   }
 ]

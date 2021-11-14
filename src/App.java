@@ -7,14 +7,12 @@ import Utils.Utils;
 
 public class App {
     // atributos static são atributos de classe
-    // TODO: Tornar Array vagas em vetor
     private static Carro[] vagas = new Carro[100]; // o estacionamento tem 100 vagas numeradas de 0..99
     private static ArrayList<Marca> marcas = new ArrayList<Marca>();
     private static ArrayList<Modelo> modelos = new ArrayList<Modelo>();
     private static ArrayList<Historico> historicos = new ArrayList<Historico>();
     private static Scanner scan = new Scanner(System.in);
     public static Utils utils = new Utils();
-    // eventualmente outros atributos static
 
     public static void main(String[] args) {
         setup();
@@ -59,6 +57,7 @@ public class App {
         scan.close();
     }
 
+    // Carregador dos dados
     private static void setup() {
         marcas = utils.getMarcas();
         modelos = utils.getModelos();
@@ -71,6 +70,7 @@ public class App {
         }
     }
 
+    // Funções principais dos menus
     private static void setarDados() {
         utils.setDatabase(vagas, "Vagas");
         utils.setDatabase(historicos, "Historico");
@@ -95,7 +95,6 @@ public class App {
                 + time.toString());
         adicionarCarro(carro);
         registrarHistorico(carro);
-        utils.setDatabase(historicos, "Historico");
     }
 
     private static void saidaCarro() {
@@ -112,15 +111,46 @@ public class App {
         removerCarro(carro);
     }
 
+    private static void gerarRelatorio() {
+        // TODO: Finalizar relatório
+        if (historicos.isEmpty()) {
+            printString("Sem históriocos no momento");
+            return;
+        }
+        printString("\nRelatório");
+        printString("Selecione um dia no formato dd/mm/yyyy");
+        String periodo = scan.nextLine();
+        recuperarDadosPeriodo(periodo);
+    }
+
     private static void verVagas() {
+        int badge = 0;
         for (int i = 0; i < vagas.length; i++) {
             if (vagas[i] != null) {
+                if (badge > 0) {
+                    if (badge == 1)
+                        printString(String.valueOf(i + 1) + ") Livre");
+                    else {
+                        printString(String.valueOf(badge) + " vagas livres em sequência");
+                    }
+                    badge = 0;
+                }
                 Carro c = vagas[i];
-                printString(String.valueOf(i + 1) + ") " + c.getModelo().getNome() + " - " + c.getPlaca());
+                printString(String.valueOf(i + 1) + ") " + c.getModelo().getNome() + " - " + c.getPlaca() + " - "
+                        + c.getEntradaFormatted(""));
+            } else {
+                badge++;
             }
+        }
+        if (badge > 0) {
+            String texto2 = badge == 1 ? "livre" : "livres";
+            String texto = badge == 1 ? "Vaga" : "Vagas";
+            printString(String.valueOf(badge) + " " + texto + " " + texto2);
+            badge = 0;
         }
     }
 
+    // Funções auxiliares
     private static void adicionarCarro(Carro carro) {
         if (vagas.length == 0) {
             vagas[0] = carro;
@@ -154,10 +184,6 @@ public class App {
         return true;
     }
 
-    private static void gerarRelatorio() {
-        printString("Relatório");
-    }
-
     private static void registrarHistorico(Carro carro) {
         if (historicos == null)
             historicos = new ArrayList<Historico>();
@@ -168,6 +194,26 @@ public class App {
         System.out.println(str);
     }
 
+    private static void recuperarDadosPeriodo(String periodo) {
+        ArrayList<Historico> hists = new ArrayList<>();
+        for (Historico h : historicos) {
+            String data = h.getCarro().getEntradaFormatted("dd/MM/YYYY");
+            if (data.equals(periodo))
+                hists.add(h);
+        }
+        if (hists.size() == 0) {
+            printString("Sem estacionamentos nesse dia!");
+            return;
+        }
+        for (Historico h : hists) {
+            Carro c = h.getCarro();
+            printString(c.getMarca().getNome() + " " + c.getModelo().getNome() + " " + c.getPlaca() + "\n"
+                    + c.getEntradaFormatted("HH:mm:ss") + " até " + c.getSaidaFormatted("HH:mm:ss") + "\n"
+                    + "Valor pago: " + c.getValor());
+        }
+    }
+
+    // Menus de visualização, "modularizados"
     private static Marca menuMarca() {
         int menuMarca = 0;
         Marca marca = null;

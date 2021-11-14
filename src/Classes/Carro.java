@@ -2,6 +2,7 @@ package Classes;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import Utils.Utils;
@@ -54,12 +55,41 @@ public class Carro {
 		return modelo;
 	}
 
+	public Marca getMarca() {
+		ArrayList<Marca> marcas = new Utils().getMarcas();
+		for (Marca m : marcas) {
+			for (Modelo m2 : m.getModelos()) {
+				if (m2.getNome().equals(modelo.getNome()))
+					return m;
+			}
+		}
+		return null;
+	}
+
+	public LocalDateTime getEntrada() {
+		return entrada;
+	}
+
+	public String getEntradaFormatted(String pattern) {
+		if (pattern.equals(""))
+			pattern = "dd/MM/yyyy HH:mm";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+		return entrada.format(formatter);
+	}
+
+	public String getSaidaFormatted(String pattern) {
+		if (pattern.equals(""))
+			pattern = "dd/MM/yyyy HH:mm";
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+		return saida.format(formatter);
+	}
+
 	public float getValor() {
 		return valor;
 	}
 
 	public String getEstadia() {
-		float diff = this.saida.toEpochSecond(ZoneOffset.UTC) - this.entrada.toEpochSecond(ZoneOffset.UTC);
+		float diff = saida.toEpochSecond(ZoneOffset.UTC) - entrada.toEpochSecond(ZoneOffset.UTC);
 
 		return "time.toString()";
 	}

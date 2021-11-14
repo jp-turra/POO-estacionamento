@@ -21,8 +21,8 @@ public class Historico {
         this.carro = carro;
     }
 
-    public LocalDateTime getDataCreated() {
-        return dataCreated;
+    public LocalDateTime getEntrada() {
+        return this.carro.getEntrada();
     }
 
     public void setCarro(Carro carro) {
