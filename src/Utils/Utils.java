@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import Classes.Historico;
 import Classes.Marca;
 import Classes.Modelo;
 
@@ -53,8 +54,23 @@ public class Utils {
             return null;
         }
     }
+    public ArrayList<Historico> getHistorico() {
+        String basePath =  System.getProperty("user.dir");
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            Historico[] arrayList = gson.fromJson(new FileReader(basePath+"/src/Utils/Historico.json"), Historico[].class);
+            ArrayList<Historico> historicos = new ArrayList<Historico>();
+            for (Historico m : arrayList) {
+                historicos.add(m);
+            }
+            return historicos;
+        } catch (Exception e) {
+            System.out.println("\nArquivo não encontrado\n");
+            return null;
+        }
+    }
 
-    public void setDatabaseObject(Object json, String ref) {
+    public void setDatabase(Object json, String ref) {
         String basePath =  System.getProperty("user.dir");
         try {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();

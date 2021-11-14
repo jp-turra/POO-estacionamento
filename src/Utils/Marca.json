@@ -2,7 +2,9 @@
   {
     "nome": "Chevrolet",
     "modelos": [
-      { "nome": "Onix" },
+      {
+        "nome": "Onix"
+      },
       {
         "nome": "Cruze"
       },
@@ -81,6 +83,14 @@
       },
       {
         "nome": "gallardo"
+      }
+    ]
+  },
+  {
+    "nome": "Renault",
+    "modelos": [
+      {
+        "nome": "Kwid"
       }
     ]
   }

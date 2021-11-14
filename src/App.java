@@ -28,6 +28,7 @@ public class App {
             printString("2) Registrar saída de carro");
             printString("3) Gerar relatório");
             printString("4) Sair do sistema");
+            printString("5) Ver vagas");
             printString("");
             printString("Insira um número para escolher uma ação:");
             menu = Integer.parseInt(scan.nextLine());
@@ -83,7 +84,7 @@ public class App {
         printString("\nEstadia " + carro.getEstadia());
         float preco = carro.getValor();
         printString("\nCusto: " + preco);
-		historicos.add(new Historico(carro));
+        registrarHistorico(carro);
 		return preco;
 	}
 
@@ -91,6 +92,11 @@ public class App {
         printString("Relatório");
     }
 	
+    private static void registrarHistorico (Carro carro) {
+        if (historicos == null) historicos = new ArrayList<Historico>();
+        historicos.add(new Historico(carro));
+        utils.setDatabase(historicos, "Historico");
+    }
 	// outros m�todos static conforme especificacao do trabalho e necessidades de implementacao
     private static void printString(String str) {
         System.out.println(str);
@@ -130,6 +136,7 @@ public class App {
             String nomeMarca = scan.nextLine();
             marca = new Marca(nomeMarca);
             marcas.add(marca);
+            utils.setDatabase(marcas, "Marca");
         }
         
         printString("\nMarca selecionada: " + marca.getNome());
@@ -177,6 +184,8 @@ public class App {
             modelo = new Modelo(nomeModelo);
             modelos.add(modelo);
             marca.addModelo(modelo);
+            utils.setDatabase(marcas, "Marca");
+            utils.setDatabase(modelos, "Modelo");
         }
         
         printString("\nModelo selecionado: " + modelo.getNome());
@@ -245,5 +254,7 @@ public class App {
     private static void setup() {
         marcas = utils.getMarcas();
         modelos = utils.getModelos();
+        historicos = utils.getHistorico();
     }
+
 }
