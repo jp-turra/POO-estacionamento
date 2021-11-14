@@ -6,6 +6,8 @@ import Classes.*;
 import Utils.Utils;
 
 public class App {
+    // TODO: limpar códgio
+    // Colocar tratativas de erros (try e catch)
     // atributos static são atributos de classe
     private static Carro[] vagas = new Carro[100]; // o estacionamento tem 100 vagas numeradas de 0..99
     private static ArrayList<Marca> marcas = new ArrayList<Marca>();
