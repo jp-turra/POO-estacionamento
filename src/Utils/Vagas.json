@@ -1,47 +1,7 @@
 [
-  {
-    "modelo": {
-      "nome": "Onix"
-    },
-    "placa": "qwe1234",
-    "entrada": {
-      "date": {
-        "year": 2021,
-        "month": 11,
-        "day": 14
-      },
-      "time": {
-        "hour": 1,
-        "minute": 56,
-        "second": 1,
-        "nano": 567264572
-      }
-    },
-    "valor": 10.0,
-    "historicoId": 1
-  },
   null,
-  {
-    "modelo": {
-      "nome": "Nivus"
-    },
-    "placa": "asd1234",
-    "entrada": {
-      "date": {
-        "year": 2021,
-        "month": 11,
-        "day": 14
-      },
-      "time": {
-        "hour": 1,
-        "minute": 56,
-        "second": 39,
-        "nano": 912789530
-      }
-    },
-    "valor": 10.0,
-    "historicoId": 3
-  },
+  null,
+  null,
   null,
   null,
   null,

@@ -1,6 +1,9 @@
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import javax.swing.text.DateFormatter;
 
 import Classes.*;
 import Utils.Utils;
@@ -8,8 +11,7 @@ import Utils.Utils;
 public class App {
     // TODO: limpar códgio
     // Colocar tratativas de erros (try e catch)
-    // atributos static são atributos de classe
-    private static Carro[] vagas = new Carro[100]; // o estacionamento tem 100 vagas numeradas de 0..99
+    private static Carro[] vagas = new Carro[100];
     private static ArrayList<Marca> marcas = new ArrayList<Marca>();
     private static ArrayList<Modelo> modelos = new ArrayList<Modelo>();
     private static ArrayList<Historico> historicos = new ArrayList<Historico>();
@@ -42,7 +44,7 @@ public class App {
                 gerarRelatorio();
                 break;
             case 4:
-                verVagas();
+                verVagas(true);
                 break;
             case 5:
                 printString("Obrigado por utilizar! Até logo.");
@@ -92,7 +94,6 @@ public class App {
             return;
         }
         Carro carro = new Carro(placa, modelo, time);
-        utils.printSpace();
         printString("Registro de entrada de carro: " + placa + ", " + marca.getNome() + " " + modelo.getNome() + ", "
                 + time.toString());
         adicionarCarro(carro);
@@ -125,30 +126,26 @@ public class App {
         recuperarDadosPeriodo(periodo);
     }
 
-    private static void verVagas() {
+    private static void verVagas(Boolean comLivres) {
         int badge = 0;
         for (int i = 0; i < vagas.length; i++) {
             if (vagas[i] != null) {
-                if (badge > 0) {
-                    if (badge == 1)
-                        printString(String.valueOf(i + 1) + ") Livre");
-                    else {
-                        printString(String.valueOf(badge) + " vagas livres em sequência");
-                    }
-                    badge = 0;
-                }
+                if (badge > 0 && badge == 1)
+                    printString(String.valueOf(i) + ") Livre");
+                else if (badge > 0)
+                    printString(String.valueOf(badge) + " vagas livres em sequência");
+                badge = 0;
                 Carro c = vagas[i];
                 printString(String.valueOf(i + 1) + ") " + c.getModelo().getNome() + " - " + c.getPlaca() + " - "
                         + c.getEntradaFormatted(""));
-            } else {
+            } else if (Boolean.TRUE.equals(comLivres)) {
                 badge++;
             }
         }
         if (badge > 0) {
-            String texto2 = badge == 1 ? "livre" : "livres";
+            String texto2 = badge == 1 ? "livre" : "livres em sequência";
             String texto = badge == 1 ? "Vaga" : "Vagas";
             printString(String.valueOf(badge) + " " + texto + " " + texto2);
-            badge = 0;
         }
     }
 
@@ -188,7 +185,7 @@ public class App {
 
     private static void registrarHistorico(Carro carro) {
         if (historicos == null)
-            historicos = new ArrayList<Historico>();
+            historicos = new ArrayList<>();
         historicos.add(new Historico(carro));
     }
 
@@ -203,7 +200,7 @@ public class App {
             if (data.equals(periodo))
                 hists.add(h);
         }
-        if (hists.size() == 0) {
+        if (hists.isEmpty()) {
             printString("Sem estacionamentos nesse dia!");
             return;
         }
@@ -211,7 +208,7 @@ public class App {
             Carro c = h.getCarro();
             printString(c.getMarca().getNome() + " " + c.getModelo().getNome() + " " + c.getPlaca() + "\n"
                     + c.getEntradaFormatted("HH:mm:ss") + " até " + c.getSaidaFormatted("HH:mm:ss") + "\n"
-                    + "Valor pago: " + c.getValor());
+                    + "Tempo de estadia: " + c.getEstadia() + "\n" + "Valor pago: " + c.getValor());
         }
     }
 
@@ -316,7 +313,7 @@ public class App {
             return null;
         }
         do {
-            verVagas();
+            verVagas(false);
             utils.printSpace();
             printString("\nSelecione uma vaga para sair: ");
             menuVaga = Integer.parseInt(scan.nextLine());
@@ -367,8 +364,8 @@ public class App {
                 break;
             }
             utils.printSpace();
-            printString("Hora de " + type + ": " + time.toLocalTime());
-            utils.printSpace();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            printString("Hora de " + type + ": " + time.format(formatter));
         }
         return time;
     }

@@ -41,7 +41,7 @@ public class Carro {
 		}
 		ArrayList<Historico> historicos = new Utils().getHistorico();
 		Historico hist = historicos.get(this.historicoId);
-		System.out.println(this);
+		this.display();
 		hist.setCarro(this);
 		historicos.set(this.historicoId, hist);
 		new Utils().setDatabase(historicos, "Historico");
@@ -89,9 +89,13 @@ public class Carro {
 	}
 
 	public String getEstadia() {
-		float diff = saida.toEpochSecond(ZoneOffset.UTC) - entrada.toEpochSecond(ZoneOffset.UTC);
+		float diff = (float) saida.toEpochSecond(ZoneOffset.UTC) - entrada.toEpochSecond(ZoneOffset.UTC);
+		int hora = (int) diff / 3600;
+		int minuto = (int) (diff % 3600 / 60);
+		System.out.println(hora);
+		System.out.println(minuto);
 
-		return "time.toString()";
+		return String.valueOf(hora) + ":" + (minuto);
 	}
 
 	public int getHistoricoId() {

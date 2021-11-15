@@ -52,43 +52,6 @@
   {
     "carro": {
       "modelo": {
-        "nome": "Onix"
-      },
-      "placa": "qwe1234",
-      "entrada": {
-        "date": {
-          "year": 2021,
-          "month": 11,
-          "day": 14
-        },
-        "time": {
-          "hour": 1,
-          "minute": 56,
-          "second": 1,
-          "nano": 567264572
-        }
-      },
-      "valor": 10.0,
-      "historicoId": 1
-    },
-    "dataCreated": {
-      "date": {
-        "year": 2021,
-        "month": 11,
-        "day": 14
-      },
-      "time": {
-        "hour": 1,
-        "minute": 56,
-        "second": 2,
-        "nano": 949692519
-      }
-    },
-    "index": 1
-  },
-  {
-    "carro": {
-      "modelo": {
         "nome": "XC40"
       },
       "placa": "qwe12345",
@@ -119,7 +82,7 @@
         }
       },
       "valor": 10.0,
-      "historicoId": 2
+      "historicoId": 1
     },
     "dataCreated": {
       "date": {
@@ -134,14 +97,14 @@
         "nano": 364402134
       }
     },
-    "index": 2
+    "index": 1
   },
   {
     "carro": {
       "modelo": {
-        "nome": "Nivus"
+        "nome": "Onix"
       },
-      "placa": "asd1234",
+      "placa": "qwe1\u0027234",
       "entrada": {
         "date": {
           "year": 2021,
@@ -149,10 +112,73 @@
           "day": 14
         },
         "time": {
-          "hour": 1,
-          "minute": 56,
-          "second": 39,
-          "nano": 912789530
+          "hour": 21,
+          "minute": 58,
+          "second": 2,
+          "nano": 959491615
+        }
+      },
+      "saida": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 23,
+          "minute": 0,
+          "second": 0,
+          "nano": 0
+        }
+      },
+      "valor": 10.0,
+      "historicoId": 2
+    },
+    "dataCreated": {
+      "date": {
+        "year": 2021,
+        "month": 11,
+        "day": 14
+      },
+      "time": {
+        "hour": 21,
+        "minute": 58,
+        "second": 6,
+        "nano": 765486189
+      }
+    },
+    "index": 2
+  },
+  {
+    "carro": {
+      "modelo": {
+        "nome": "XC40"
+      },
+      "placa": "rty1234",
+      "entrada": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 22,
+          "minute": 1,
+          "second": 4,
+          "nano": 458280004
+        }
+      },
+      "saida": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 22,
+          "minute": 8,
+          "second": 42,
+          "nano": 242815247
         }
       },
       "valor": 10.0,
@@ -165,12 +191,99 @@
         "day": 14
       },
       "time": {
-        "hour": 1,
-        "minute": 56,
-        "second": 42,
-        "nano": 473655923
+        "hour": 22,
+        "minute": 1,
+        "second": 8,
+        "nano": 235678874
       }
     },
     "index": 3
+  },
+  {
+    "carro": {
+      "modelo": {
+        "nome": "Onix"
+      },
+      "placa": "qwe1234",
+      "entrada": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 22,
+          "minute": 18,
+          "second": 33,
+          "nano": 594496790
+        }
+      },
+      "valor": 10.0,
+      "historicoId": 4
+    },
+    "dataCreated": {
+      "date": {
+        "year": 2021,
+        "month": 11,
+        "day": 14
+      },
+      "time": {
+        "hour": 22,
+        "minute": 18,
+        "second": 35,
+        "nano": 666946846
+      }
+    },
+    "index": 4
+  },
+  {
+    "carro": {
+      "modelo": {
+        "nome": "XC40"
+      },
+      "placa": "rty1234",
+      "entrada": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 22,
+          "minute": 19,
+          "second": 38,
+          "nano": 739988162
+        }
+      },
+      "saida": {
+        "date": {
+          "year": 2021,
+          "month": 11,
+          "day": 14
+        },
+        "time": {
+          "hour": 23,
+          "minute": 30,
+          "second": 0,
+          "nano": 0
+        }
+      },
+      "valor": 10.0,
+      "historicoId": 5
+    },
+    "dataCreated": {
+      "date": {
+        "year": 2021,
+        "month": 11,
+        "day": 14
+      },
+      "time": {
+        "hour": 22,
+        "minute": 19,
+        "second": 42,
+        "nano": 221640010
+      }
+    },
+    "index": 5
   }
 ]
